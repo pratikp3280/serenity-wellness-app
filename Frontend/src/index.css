@@ -1,0 +1,140 @@
+/* Downloads fonts from Google */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;                  
+@tailwind components;
+@tailwind utilities;
+
+/* These 3 lines MUST be at the top — they load Tailwind */
+/*
+Base → Components → Utilities
+(low priority → high priority)
+ */
+
+body {
+  background-color: #0A0E1A;
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;                  /* Prevent horizontal scroll from animations or wide elements */    
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #4ECDC4, #F7C948);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass card - frosted glass effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+/* Teal button */
+.btn-aurora {
+  background: linear-gradient(135deg, #4ECDC4, #2db3aa);
+  color: #0A0E1A;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+
+.btn-aurora:hover {
+  box-shadow: 0 0 30px rgba(78, 205, 196, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Ghost button */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(78, 205, 196, 0.4);
+  color: #4ECDC4;
+  transition: all 0.3s ease;
+}
+.btn-ghost:hover {
+  background: rgba(78, 205, 196, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Custom scrollbar (Chrome, Edge)*/
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0A0E1A; }
+::-webkit-scrollbar-thumb { background: #4ECDC4; border-radius: 2px; }
+
+/* Auto scroll for testimonials */
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.testimonials-track {
+  animation: scrollLeft 35s linear infinite;
+}
+.testimonials-track:hover {
+  animation-play-state: paused;
+}
+
+/* CSS Animation{smoothly changing styles over time} using @keyframes */
+/* ── BREATHING CIRCLE ANIMATIONS ── */
+@keyframes breatheIn {
+  0%, 100% { transform: scale(1);    opacity: 0.5; }
+  35%       { transform: scale(1.45); opacity: 0.9; }
+  65%       { transform: scale(1.45); opacity: 0.9; }
+}
+
+@keyframes breatheRing {
+  0%, 100% { transform: scale(1);   opacity: 0.3; }
+  35%       { transform: scale(1.6); opacity: 0.6; }
+  65%       { transform: scale(1.6); opacity: 0.6; }
+}
+
+@keyframes breatheOuter {
+  0%, 100% { transform: scale(1);   opacity: 0.15; }
+  35%       { transform: scale(1.8); opacity: 0.3;  }
+  65%       { transform: scale(1.8); opacity: 0.3;  }
+}
+
+/* Auto scroll for testimonials */
+@keyframes scrollLeft {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.testimonials-track {
+  animation: scrollLeft 35s linear infinite;
+}
+
+.testimonials-track:hover {
+  animation-play-state: paused;
+}
+
+/*The -50% moves exactly half the total width — which is where the duplicate starts — creating a seamless loop.*/
+
+
+
+/* Floating animation for elements - It creates a floating effect ⬆️⬇️ */
+@keyframes floatUp {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-14px); }
+}
+/* 0% → Start
+   50% → Middle
+   100% → End
+   
+   transform: translateY(0px); -> Normal position 
+   transform: translateY(-14px); -> Move UP by 14px (-ve Upward movement) */
+
+   /* All 3 together create: Wave-like floating 🌊 */
+.float-1 {
+  animation: floatUp 6s ease-in-out infinite;
+}
+
+.float-2 {
+  animation: floatUp 7s ease-in-out 1.5s infinite;
+}
+
+.float-3 {
+  animation: floatUp 8s ease-in-out 3s infinite;
+}
