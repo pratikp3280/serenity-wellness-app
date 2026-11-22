@@ -6,6 +6,7 @@
             - takes app component and injects it into the index.html iside <div id="root"></div>, making the UI appear on the screen.
 */
 
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'

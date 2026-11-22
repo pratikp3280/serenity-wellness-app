@@ -31,7 +31,7 @@ const fadeUp = {
 };
 
 // ── COMPONENT ────────────────────────────────────────────────────
-export default function Hero() {
+export default function Hero({ onRegister }) {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24">
       {/* ── BACKGROUND LAYER ──────────────────────────────────── */}
@@ -180,8 +180,9 @@ export default function Hero() {
             className="flex flex-col sm:flex-row gap-4 mb-16"
           >
             {/* Primary CTA — filled teal button */}
-            <a
-              href="#mood"
+            <button
+              type="button"
+              onClick={onRegister}
               className="btn-aurora px-8 py-4 rounded-full text-base inline-flex items-center justify-center gap-2 group"
             >
               Begin Your Journey
@@ -189,7 +190,7 @@ export default function Hero() {
                 size={18}
                 className="group-hover:translate-x-1 transition-transform duration-200"
               />
-            </a>
+            </button>
 
             <a
               href="#how-it-works"

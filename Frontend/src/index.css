@@ -138,3 +138,7 @@ body {
 .float-3 {
   animation: floatUp 8s ease-in-out 3s infinite;
 }
+
+html {
+  scrollbar-gutter: stable;
+}

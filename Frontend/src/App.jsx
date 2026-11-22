@@ -1,45 +1,86 @@
-/* App.jsx : Its Main react component - the root UI component
-           :  the entry point of the app where we render the main UI.
-           : Here we can set up global state, routing, and render the main layout.
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 
-Flow : index.html -> main.jsx -> App.jsx => UI appears on the screen
-Note: React components must return JSX
-JSX : JavaScript XML = HTML inside JavaScript
-*/
-import Navbar from "./components/Navbar"; // importing the Navbar component to use in our main App component
-import Hero from "./components/Hero";
-import MoodSelector from "./components/MoodSelector";
-import HowItWorks from "./components/HowItWorks";
-import Programs from './components/Programs'
-import BreathingWidget from './components/BreathingWidget'
-import Leaderboard from './components/Leaderboard'
-import Notifications from './components/Notifications'
-import Testimonials from './components/Testimonials'
-import Blog from './components/Blog'
-import FAQ from './components/FAQ'
-import CTABanner from './components/CTABanner'
-import Footer from './components/Footer'
+import { AuthProvider } from "./context/AuthContext";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AuthenticatedLayout from "./Layouts/AuthenticatedLayout";
+
+import HomePage from "./pages/HomePage";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+
+import Account from "./pages/Account";
+import MoodCheckIn from "./pages/MoodCheckIn";
+import MoodHistory from "./pages/MoodHistory";
+import Analytics from "./pages/Analytics";
+
+// Registration navigation wrapper
+function RegisterPage() {
+  const navigate = useNavigate();
+
+  return <Register onBack={() => navigate("/")} />;
+}
+
+// Temporary dashboard until Milestone 3
+function DashboardPlaceholder() {
+  return (
+    <section className="max-w-5xl mx-auto py-8">
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-8">
+        <p className="text-sm uppercase tracking-widest text-[#4ECDC4]">
+          Your wellness space
+        </p>
+
+        <h2 className="font-display text-4xl text-white mt-3">
+          Welcome to Serenity
+        </h2>
+
+        <p className="text-gray-400 mt-4 leading-relaxed">
+          Your personal wellness dashboard is coming together. Start by
+          recording your mood or exploring your mood history.
+        </p>
+      </div>
+    </section>
+  );
+}
 
 export default function App() {
-  //creates and exports(makes available to other files) the main App component
   return (
-    <div className="min-h-screen bg-midnight">
-      <Navbar />         {/*renders the Navbar component at the top of the page */}
-      <main>
-        <Hero />         {/*renders the Hero component in the main content area middle */}
-        <MoodSelector />   {/*renders the MoodSelector component below the Hero component */}
-        <HowItWorks />  {/*renders the HowItWorks component below the MoodSelector component */}
-        <Programs />    {/*renders the Programs component below the HowItWorks component */}
-       <BreathingWidget /> {/*renders the BreathingWidget component below the Programs component */}
-        <Leaderboard />   {/*renders the Leaderboard component at the bottom of the main content area */} 
-        <Notifications /> {/*renders the Notifications component at the bottom of the main content area */}
-        <Testimonials />  {/*renders the Testimonials component at the bottom of the main content area */}
-        <Blog />          {/*renders the Blog component at the bottom of the main content area */}
-        <FAQ />           {/*renders the FAQ component at the bottom of the main content area */}
-        <CTABanner />     {/*renders the CTA Banner component at the bottom of the main content area */}
-       
-      </main>
-      <Footer />        
-    </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          {/* Public Homepage */}
+          <Route path="/" element={<HomePage />} />
+
+          {/* Public Authentication Pages */}
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<Login />} />
+
+          {/* Protected Application */}
+          <Route element={<ProtectedRoute />}>
+            {/* Shared Authenticated Layout */}
+            <Route element={<AuthenticatedLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+
+              <Route path="/account" element={<Account />} />
+
+              <Route path="/mood-checkin" element={<MoodCheckIn />} />
+
+              <Route path="/mood-history" element={<MoodHistory />} />
+
+              <Route path="/analytics" element={<Analytics />} />
+            </Route>
+          </Route>
+
+          {/* Unknown URLs */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

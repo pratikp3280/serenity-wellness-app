@@ -36,3 +36,27 @@ desktop.ini
 # Exclude unrelated Word documents
 /Frontend/public/images/182_Camera Ready_SEATNGA_1.(3).docx
 /Frontend/public/images/before.docx
+
+
+
+# ==========================================
+# Serenity - Backend and project exclusions
+# ==========================================
+
+# Exclude all Postman folders at every level
+**/postman/
+**/.postman/
+
+# Maven generated build output
+**/target/
+
+# Eclipse workspace/project metadata
+**/.settings/
+**/.classpath
+**/.project
+
+# Exclude accidental root-level npm lockfile
+/package-lock.json
+
+# Exclude exported UI audit archive
+/Frontend/serenity-ui-audit-round1.zip
