@@ -7,46 +7,34 @@ import {
 } from "react-router-dom";
 
 import { AuthProvider } from "./context/AuthContext";
-import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthenticatedLayout from "./Layouts/AuthenticatedLayout";
+import ProgramsPage from "./pages/ProgramsPage";
 
+// Main pages
 import HomePage from "./pages/HomePage";
-import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
-
+import Register from "./pages/Register";
 import Account from "./pages/Account";
+
+// Mood pages
 import MoodCheckIn from "./pages/MoodCheckIn";
 import MoodHistory from "./pages/MoodHistory";
 import Analytics from "./pages/Analytics";
+
+// Blog pages
+import Blogs from "./pages/Blogs";
+import BlogArticle from "./pages/BlogArticle";
+
+// Mood-based session page
+import SessionPage from "./pages/SessionPage";
 
 // Registration navigation wrapper
 function RegisterPage() {
   const navigate = useNavigate();
 
   return <Register onBack={() => navigate("/")} />;
-}
-
-// Temporary dashboard until Milestone 3
-function DashboardPlaceholder() {
-  return (
-    <section className="max-w-5xl mx-auto py-8">
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-8">
-        <p className="text-sm uppercase tracking-widest text-[#4ECDC4]">
-          Your wellness space
-        </p>
-
-        <h2 className="font-display text-4xl text-white mt-3">
-          Welcome to Serenity
-        </h2>
-
-        <p className="text-gray-400 mt-4 leading-relaxed">
-          Your personal wellness dashboard is coming together. Start by
-          recording your mood or exploring your mood history.
-        </p>
-      </div>
-    </section>
-  );
 }
 
 export default function App() {
@@ -65,15 +53,29 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             {/* Shared Authenticated Layout */}
             <Route element={<AuthenticatedLayout />}>
+              {/* Dashboard */}
               <Route path="/dashboard" element={<Dashboard />} />
 
+              {/* Account */}
               <Route path="/account" element={<Account />} />
 
+              {/* Mood Features */}
               <Route path="/mood-checkin" element={<MoodCheckIn />} />
+
+               <Route path="/programs" element={<ProgramsPage />} />
+
 
               <Route path="/mood-history" element={<MoodHistory />} />
 
               <Route path="/analytics" element={<Analytics />} />
+
+              {/* Serenity Journal */}
+              <Route path="/blogs" element={<Blogs />} />
+
+              <Route path="/blogs/:slug" element={<BlogArticle />} />
+
+              {/* Individual Mood-Based Sessions */}
+              <Route path="/sessions/:moodId" element={<SessionPage />} />
             </Route>
           </Route>
 

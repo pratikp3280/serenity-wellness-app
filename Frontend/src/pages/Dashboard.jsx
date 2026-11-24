@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-
+import ReviewForm from "../components/ReviewForm";
 import {
   Heart,
   History,
@@ -213,6 +213,10 @@ export default function Dashboard() {
         </div>
 
       </section>
+
+      {/* Share Your Experience */}
+      <ReviewForm />
+
     </div>
   );
 }

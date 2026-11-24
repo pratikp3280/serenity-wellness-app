@@ -1,347 +1,205 @@
-/* BreathingWidget is a React interactive component that guides users through a breathing exercise (4-4-6 technique) using:
-⏱️ Timers 🔄 State changes 🎬 Animations 🫁 Visual breathing circle 
-*/
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { Play, Square, RotateCcw } from "lucide-react";
 
-import { useState, useEffect, useRef } from 'react'      
-import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { Play, Square } from 'lucide-react'    // Icons for play and stop buttons
-
-/**
- * useState: Store changing values
- * useEffect Run logic (timers)
- * useRef: Keep mutable values without re-rendering
- * useInView: Trigger animations when component enters viewport
- * motion: Animate elements with declarative syntax
- * AnimatePresence: Handle enter/exit animations for components
- */
-
-// Array of PHASES(Inhale, Hold, Exhale) with properties for label, duration, scale, and colors
 const PHASES = [
-  {
-    label: 'Breathe In...',
-    duration: 4,
-    scale: 1.45,
-    color: 'rgba(78, 205, 196, 0.4)',
-    ringColor: 'rgba(78, 205, 196, 0.15)',
-  },
-  {
-    label: 'Hold...',
-    duration: 4,
-    scale: 1.45,
-    color: 'rgba(247, 201, 72, 0.4)',
-    ringColor: 'rgba(247, 201, 72, 0.15)',
-  },
-  {
-    label: 'Breathe Out...',
-    duration: 6,
-    scale: 1.0,
-    color: 'rgba(78, 205, 196, 0.2)',
-    ringColor: 'rgba(78, 205, 196, 0.08)',
-  },
-]
+  { label: "Breathe in", instruction: "Gently breathe in", duration: 4, scale: 1.2 },
+  { label: "Breathe out", instruction: "Slowly breathe out", duration: 6, scale: 0.84 },
+];
 
-// Framer Motion animations - 
+const TOTAL_CYCLES = 3;
+
 const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0 },
-}
+};
 
 export default function BreathingWidget() {
-  const [active, setActive] = useState(false)       // Track if breathing session is active(running / stopped)
-  const [phase, setPhase] = useState(0)             // Track current phase index (0: Inhale, 1: Hold, 2: Exhale)
-  const [countdown, setCountdown] = useState(PHASES[0].duration)   //  Track remaining time in current phase, initialized to duration of first phase (Inhale)
-  const [cycles, setCycles] = useState(0)            // Track completed cycles of the breathing exercise (one cycle = Inhale + Hold + Exhale)
-
-  const intervalRef = useRef(null)     // Store interval ID for the timer, allowing us to clear it when needed without causing re-renders
-  const phaseRef = useRef(0)          // Store current phase index in a ref to access it inside the timmer
-
-  const ref = useRef(null)           // Ref for the main section element to track if it's in the viewport using useInView hook
-  const isInView = useInView(ref, { once: true, margin: '-80px' })  // Track if the component is in view, triggering animations only once when it enters the viewport with a margin offset
+  const [status, setStatus] = useState("ready");
+  const [phaseIndex, setPhaseIndex] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState(PHASES[0].duration);
+  const [cyclesCompleted, setCyclesCompleted] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (!active) {             // if not active -> stop Timer -> reset everyThing
-      clearInterval(intervalRef.current)
-      phaseRef.current = 0
-      setPhase(0)
-      setCountdown(PHASES[0].duration)
-      return
-    }
+    if (status !== "running") return undefined;
 
-    // Phase Switching Logic
-    function runPhase(idx) {
-      phaseRef.current = idx
-      setPhase(idx)
-      setCountdown(PHASES[idx].duration)
+    const timerId = window.setTimeout(() => {
+      if (secondsLeft > 1) {
+        setSecondsLeft((seconds) => seconds - 1);
+        return;
+      }
 
-      let remaining = PHASES[idx].duration
+      if (phaseIndex === 0) {
+        setPhaseIndex(1);
+        setSecondsLeft(PHASES[1].duration);
+        return;
+      }
 
-      intervalRef.current = setInterval(() => {
-        remaining -= 1
-        setCountdown(remaining)
+      const nextCycleCount = cyclesCompleted + 1;
+      setCyclesCompleted(nextCycleCount);
 
-        if (remaining <= 0) {
-          clearInterval(intervalRef.current)
-          const next = (idx + 1) % PHASES.length
-          if (next === 0) {         // Cycle Tracking
-            setCycles((c) => c + 1)
-          }
-          runPhase(next)
-        }
-      }, 1000)
-    }
+      if (nextCycleCount >= TOTAL_CYCLES) {
+        setStatus("complete");
+        setPhaseIndex(0);
+        setSecondsLeft(PHASES[0].duration);
+      } else {
+        setPhaseIndex(0);
+        setSecondsLeft(PHASES[0].duration);
+      }
+    }, 1000);
 
-    runPhase(0)
+    return () => window.clearTimeout(timerId);
+  }, [status, secondsLeft, phaseIndex, cyclesCompleted]);
 
-    return () => clearInterval(intervalRef.current)
-  }, [active])
+  const currentPhase = PHASES[phaseIndex];
+  const isRunning = status === "running";
 
-  const currentPhase = PHASES[phase]
+  function startSession() {
+    setPhaseIndex(0);
+    setSecondsLeft(PHASES[0].duration);
+    setCyclesCompleted(0);
+    setStatus("running");
+  }
+
+  function stopSession() {
+    setStatus("stopped");
+    setPhaseIndex(0);
+    setSecondsLeft(PHASES[0].duration);
+  }
+
+  let statusMessage = "Ready when you are. Begin with a comfortable breath.";
+  if (status === "running") statusMessage = `${currentPhase.instruction}.`;
+  if (status === "stopped") statusMessage = "Session stopped. You can begin again whenever you're ready.";
+  if (status === "complete") statusMessage = "You've completed three gentle breathing cycles. Take a moment before returning to your day.";
+
+  const animationDuration = prefersReducedMotion ? 0.01 : currentPhase.duration;
 
   return (
-    <section ref={ref} className="py-28 px-6 relative overflow-hidden">
-
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+    <section
+      id="breathing"
+      ref={ref}
+      className="scroll-mt-24 relative overflow-hidden px-6 py-28"
+    >
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div
-          className="w-[600px] h-[600px] rounded-full blur-3xl"
-          style={{ background: 'rgba(78, 205, 196, 0.03)' }}
+          className="h-[min(600px,90vw)] w-[min(600px,90vw)] rounded-full blur-3xl"
+          style={{ background: "rgba(78,205,196,0.035)" }}
         />
       </div>
 
-      <div className="max-w-4xl mx-auto relative">
-
+      <div className="relative mx-auto max-w-4xl">
         <motion.div
           variants={fadeUp}
           initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-16"
+          animate={isInView ? "visible" : "hidden"}
+          transition={{ duration: 0.65 }}
+          className="mb-14 text-center"
         >
-          <p className="text-aurora/60 text-sm tracking-widest uppercase mb-4">
-            Interactive
+          <p className="mb-4 text-sm uppercase tracking-widest text-aurora/60">
+            TAKE A MOMENT
           </p>
-          <h2 className="font-display text-5xl md:text-6xl font-light text-white">
-            Try a quick{' '}
-            <span className="italic gradient-text">breath</span>
+          <h2 className="font-display text-5xl font-light text-white md:text-6xl">
+            Try a quick <span className="italic gradient-text">breath.</span>
           </h2>
-          <p className="text-white/40 text-base mt-5 max-w-md mx-auto leading-relaxed">
-            The 4-4-6 technique activates your parasympathetic nervous system in under a minute.
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/50">
+            Follow a gentle visual breathing rhythm. Breathe comfortably, move at
+            your own pace, and stop whenever you need.
           </p>
         </motion.div>
 
         <motion.div
           variants={fadeUp}
           initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="flex flex-col items-center gap-12"
+          animate={isInView ? "visible" : "hidden"}
+          transition={{ duration: 0.65, delay: 0.12 }}
+          className="flex flex-col items-center gap-9"
         >
-
           <div
-            className="relative flex items-center justify-center"
-            style={{ width: '280px', height: '280px' }}
+            className="relative flex aspect-square w-[min(72vw,280px)] items-center justify-center"
+            aria-hidden="true"
           >
-
             <motion.div
-              className="absolute rounded-full"
-              animate={
-                active
-                  ? { scale: currentPhase.scale * 1.3, opacity: 0.15 }
-                  : { scale: 1, opacity: 0.08 }
-              }
-              transition={{
-                duration: currentPhase.duration,
-                ease: 'easeInOut',
-              }}
-              style={{
-                width: '280px',
-                height: '280px',
-                background: currentPhase.ringColor,
-                border: '1px solid rgba(78,205,196,0.1)',
-              }}
+              className="absolute h-full w-full rounded-full border border-aurora/10"
+              animate={{ scale: isRunning ? currentPhase.scale : 1, opacity: isRunning ? 0.13 : 0.07 }}
+              transition={{ duration: animationDuration, ease: "easeInOut" }}
+              style={{ background: "rgba(78,205,196,0.06)" }}
             />
-
             <motion.div
-              className="absolute rounded-full"
-              animate={
-                active
-                  ? { scale: currentPhase.scale * 1.1, opacity: 0.25 }
-                  : { scale: 1, opacity: 0.15 }
-              }
-              transition={{
-                duration: currentPhase.duration,
-                ease: 'easeInOut',
-              }}
-              style={{
-                width: '200px',
-                height: '200px',
-                background: currentPhase.ringColor,
-                border: '1px solid rgba(78,205,196,0.2)',
-              }}
+              className="absolute h-[72%] w-[72%] rounded-full border border-aurora/20"
+              animate={{ scale: isRunning ? currentPhase.scale : 1, opacity: isRunning ? 0.22 : 0.12 }}
+              transition={{ duration: animationDuration, ease: "easeInOut" }}
+              style={{ background: "rgba(78,205,196,0.08)" }}
             />
-
             <motion.div
-              className="absolute rounded-full"
-              animate={
-                active
-                  ? {
-                      scale: currentPhase.scale,
-                      background: currentPhase.color,
-                    }
-                  : {
-                      scale: 1,
-                      background: 'rgba(78, 205, 196, 0.15)',
-                    }
-              }
-              transition={{
-                duration: currentPhase.duration,
-                ease: 'easeInOut',
-              }}
-              style={{
-                width: '130px',
-                height: '130px',
-                border: '1.5px solid rgba(78,205,196,0.5)',
-              }}
+              className="absolute h-[46%] w-[46%] rounded-full border border-aurora/40"
+              animate={{ scale: isRunning ? currentPhase.scale : 1, opacity: isRunning ? 0.7 : 0.35 }}
+              transition={{ duration: animationDuration, ease: "easeInOut" }}
+              style={{ background: "rgba(78,205,196,0.16)" }}
             />
-
             <div className="relative z-10 text-center">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={active ? phase : 'idle'}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.35 }}
-                  className="flex flex-col items-center gap-1"
-                >
-                  {active ? (
-                    <>
-                      <span className="text-aurora/70 text-xs tracking-widest uppercase font-medium">
-                        {currentPhase.label}
-                      </span>
-                      <span className="font-display text-4xl text-white font-light">
-                        {countdown}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-white/30 text-xs tracking-widest uppercase">
-                        Ready
-                      </span>
-                      <span className="font-display text-2xl text-white/50 italic font-light">
-                        to begin
-                      </span>
-                    </>
-                  )}
-                </motion.div>
-              </AnimatePresence>
+              <p className="font-display text-xl italic text-white">
+                {isRunning ? currentPhase.label : status === "complete" ? "Well done" : "Breathe"}
+              </p>
+              <p className="mt-1 text-4xl font-light tabular-nums text-aurora">
+                {isRunning ? secondsLeft : status === "complete" ? "✓" : ""}
+              </p>
             </div>
-
           </div>
 
-          {active && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex items-center gap-3"
-            >
-              {PHASES.map((p, i) => (
-                <div
-                  key={p.label}
-                  className={
-                    'flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-500 ' +
-                    (i === phase
-                      ? 'border border-aurora/30'
-                      : 'opacity-30')
-                  }
-                  style={
-                    i === phase
-                      ? { background: 'rgba(78,205,196,0.1)' }
-                      : {}
-                  }
-                >
-                  <div className={
-                    'w-1.5 h-1.5 rounded-full ' +
-                    (i === phase ? 'bg-aurora' : 'bg-white/30')
-                  } />
-                  <span className={
-                    'text-xs ' +
-                    (i === phase ? 'text-aurora' : 'text-white/40')
-                  }>
-                    {p.label.replace('...', '')}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-          )}
+          <div className="max-w-xl text-center">
+            <p aria-live="polite" aria-atomic="true" className="min-h-6 text-sm text-white/65">
+              {statusMessage}
+            </p>
+            <p className="mt-3 text-xs tracking-wide text-white/35">
+              {cyclesCompleted} of {TOTAL_CYCLES} cycles completed
+            </p>
+          </div>
 
-          {cycles > 0 && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-white/30 text-sm"
-            >
-              {cycles} {cycles === 1 ? 'cycle' : 'cycles'} completed — you are doing great
-            </motion.p>
-          )}
-
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setActive(!active)}
-            className={
-              'flex items-center gap-3 px-10 py-4 rounded-full font-medium text-base transition-all duration-300 ' +
-              (active
-                ? 'glass-card border border-white/20 text-white hover:border-white/40'
-                : 'btn-aurora')
-            }
-          >
-            {active ? (
-              <>
-                <Square size={16} className="fill-current" />
-                Stop Session
-              </>
-            ) : (
-              <>
-                <Play size={16} className="fill-current" />
-                Begin Breathing
-              </>
-            )}
-          </motion.button>
-
-          <div className="grid grid-cols-3 gap-4 w-full max-w-sm">
-            {[
-              { label: 'Inhale', val: '4s', color: 'text-aurora' },
-              { label: 'Hold',   val: '4s', color: 'text-gold' },
-              { label: 'Exhale', val: '6s', color: 'text-aurora' },
-            ].map((t) => (
-              <div
-                key={t.label}
-                className="glass-card rounded-2xl p-4 text-center"
+          <div className="flex flex-col items-center gap-4 sm:flex-row">
+            {isRunning ? (
+              <button
+                type="button"
+                onClick={stopSession}
+                className="inline-flex items-center gap-3 rounded-full border border-white/20 px-9 py-4 text-base font-medium text-white transition-colors hover:border-white/40"
               >
-                <p className={
-                  'font-display text-2xl font-light ' + t.color
-                }>
-                  {t.val}
+                <Square size={15} className="fill-current" aria-hidden="true" />
+                Stop Session
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={startSession}
+                className="btn-aurora inline-flex items-center gap-3 rounded-full px-9 py-4 text-base font-medium"
+              >
+                {status === "complete" ? (
+                  <RotateCcw size={17} aria-hidden="true" />
+                ) : (
+                  <Play size={17} className="fill-current" aria-hidden="true" />
+                )}
+                {status === "complete" ? "Try Again" : status === "stopped" ? "Begin Again" : "Begin Breathing"}
+              </button>
+            )}
+          </div>
+
+          <div className="grid w-full max-w-sm grid-cols-2 gap-4">
+            {[
+              { label: "Inhale", value: "4 sec", color: "text-aurora" },
+              { label: "Exhale", value: "6 sec", color: "text-gold" },
+            ].map((phase) => (
+              <div key={phase.label} className="glass-card rounded-2xl p-4 text-center">
+                <p className={`font-display text-2xl font-light ${phase.color}`}>
+                  {phase.value}
                 </p>
-                <p className="text-white/35 text-xs mt-1">
-                  {t.label}
-                </p>
+                <p className="mt-1 text-xs text-white/40">{phase.label}</p>
               </div>
             ))}
           </div>
-
+          <p className="text-xs text-white/30">3 cycles · about 30 seconds · no account needed</p>
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
-
-
-/*
-useState → dynamic values
-useEffect → timer logic
-useRef → persistent values
-setInterval → countdown
-% → looping phases
-motion.div → animation
-AnimatePresence → smooth transitions
- */

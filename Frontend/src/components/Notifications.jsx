@@ -48,11 +48,7 @@ const fadeLeft = {
   hidden: { opacity: 0, x: -40 },   
   visible: { opacity: 1, x: 0 },   
 }
-//  fadeUp : slides from bottom -> up
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0 },
-}
+
 
 
 // Notifications Component: it showcases the smart reminders feature of the app, with animated notification cards and a description of the benefits.

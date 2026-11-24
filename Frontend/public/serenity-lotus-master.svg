@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Serenity lotus</title>
+  <desc id="desc">A layered teal and mint lotus with a small floating orb, representing calm, growth and mindfulness.</desc>
+  <defs>
+    <linearGradient id="petalCenter" x1="0" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#B8FFF3"/>
+      <stop offset="0.42" stop-color="#4ECDC4"/>
+      <stop offset="1" stop-color="#0D9D9A"/>
+    </linearGradient>
+    <linearGradient id="petalLight" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#B8E6D9"/>
+      <stop offset="0.5" stop-color="#55E2D3"/>
+      <stop offset="1" stop-color="#079DAD"/>
+    </linearGradient>
+    <linearGradient id="petalDeep" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#42D6CE"/>
+      <stop offset="1" stop-color="#087A91"/>
+    </linearGradient>
+    <linearGradient id="petalBase" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#26C7BF" stop-opacity="0.88"/>
+      <stop offset="1" stop-color="#075C72" stop-opacity="0.95"/>
+    </linearGradient>
+    <radialGradient id="orb" cx="35%" cy="28%" r="75%">
+      <stop offset="0" stop-color="#F1FFFD"/>
+      <stop offset="0.38" stop-color="#A9FFF2"/>
+      <stop offset="1" stop-color="#42D7D1"/>
+    </radialGradient>
+    <radialGradient id="coreGlow">
+      <stop offset="0" stop-color="#8FFFF0" stop-opacity="0.48"/>
+      <stop offset="1" stop-color="#4ECDC4" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="11"/>
+    </filter>
+  </defs>
+
+  <!-- Very restrained glow beneath the meeting point of the petals. -->
+  <ellipse cx="256" cy="376" rx="112" ry="43" fill="url(#coreGlow)" filter="url(#softGlow)"/>
+
+  <!-- Lower, resting petals. -->
+  <path d="M256 374 C200 394 122 378 68 337 C132 307 207 326 256 374Z" fill="url(#petalBase)" opacity="0.84"/>
+  <path d="M256 374 C312 394 390 378 444 337 C380 307 305 326 256 374Z" fill="url(#petalBase)" opacity="0.84"/>
+
+  <!-- Outer petals. -->
+  <path d="M256 378 C190 367 113 322 70 256 C145 247 218 296 256 378Z" fill="url(#petalDeep)" stroke="#51DCD2" stroke-opacity="0.55" stroke-width="2"/>
+  <path d="M256 378 C322 367 399 322 442 256 C367 247 294 296 256 378Z" fill="url(#petalDeep)" stroke="#51DCD2" stroke-opacity="0.55" stroke-width="2"/>
+
+  <!-- Middle petals. -->
+  <path d="M256 378 C196 342 151 277 158 184 C219 204 252 273 256 378Z" fill="url(#petalLight)" stroke="#A3F5E9" stroke-opacity="0.72" stroke-width="2"/>
+  <path d="M256 378 C316 342 361 277 354 184 C293 204 260 273 256 378Z" fill="url(#petalLight)" stroke="#A3F5E9" stroke-opacity="0.72" stroke-width="2"/>
+
+  <!-- Central petal. -->
+  <path d="M256 380 C203 324 185 230 256 139 C327 230 309 324 256 380Z" fill="url(#petalCenter)" stroke="#D1FFF7" stroke-opacity="0.78" stroke-width="2.5"/>
+
+  <!-- Soft inner highlights make the layered silhouette readable without fine detail. -->
+  <path d="M256 157 C229 222 231 303 256 365 C281 303 283 222 256 157Z" fill="#DFFFF9" opacity="0.10"/>
+  <path d="M256 375 C226 330 207 285 202 244" fill="none" stroke="#E5FFFA" stroke-opacity="0.24" stroke-width="2" stroke-linecap="round"/>
+  <path d="M256 375 C286 330 305 285 310 244" fill="none" stroke="#E5FFFA" stroke-opacity="0.24" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Floating orb: a calm focal point above the lotus. -->
+  <circle cx="256" cy="91" r="23" fill="#4ECDC4" opacity="0.34" filter="url(#softGlow)"/>
+  <circle cx="256" cy="91" r="13.5" fill="url(#orb)" stroke="#D6FFFA" stroke-opacity="0.8" stroke-width="1.5"/>
+</svg>

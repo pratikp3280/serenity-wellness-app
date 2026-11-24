@@ -12,7 +12,6 @@ import {
   BatteryLow,
   Frown,
   RefreshCw,
-  ArrowLeft,
   Clock,
 } from "lucide-react";
 

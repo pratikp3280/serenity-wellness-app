@@ -1,13 +1,12 @@
 
 import { useNavigate } from "react-router-dom";
 
-// Existing homepage components
+// Homepage components
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import HowItWorks from "../components/HowItWorks";
-import Programs from "../components/Programs";
 import BreathingWidget from "../components/BreathingWidget";
-import Leaderboard from "../components/Leaderboard";
+import Programs from "../components/Programs";
 import Notifications from "../components/Notifications";
 import Testimonials from "../components/Testimonials";
 import Blog from "../components/Blog";
@@ -16,38 +15,48 @@ import CTABanner from "../components/CTABanner";
 import Footer from "../components/Footer";
 
 export default function HomePage() {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  return (
+    <div className="min-h-screen bg-midnight">
 
-    return (
-        <div className="min-h-screen bg-midnight">
+      {/* Navigation */}
+      <Navbar onRegister={() => navigate("/register")} />
 
-            <Navbar onRegister={() => navigate("/register")} />
+      <main>
 
-            <main>
-                <Hero onRegister={() => navigate("/register")} />
+        {/* 1. Hero - Introduce Serenity */}
+        <Hero onRegister={() => navigate("/register")} />
 
-                <HowItWorks />
+        {/* 2. How It Works - Explain the value */}
+        <HowItWorks />
 
-                <Programs />
+        {/* 3. Quick Experience - Let visitors try Serenity */}
+        <BreathingWidget />
 
-                <BreathingWidget />
+        {/* 4. Programs - Explore mindful experiences */}
+        <Programs />
 
-                <Leaderboard />
+        {/* 5. Notifications - Encourage consistent practice */}
+        <Notifications />
 
-                <Notifications />
+        {/* 6. Testimonials - Build trust through real reviews */}
+        <Testimonials />
 
-                <Testimonials />
+        {/* 7. Blog - Provide useful wellness knowledge */}
+        <Blog />
 
-                <Blog />
+        {/* 8. FAQ - Answer visitor questions */}
+        <FAQ />
 
-                <FAQ />
+        {/* 9. Final CTA - Encourage visitors to get started */}
+        <CTABanner />
 
-                <CTABanner />
-            </main>
+      </main>
 
-            <Footer />
+      {/* Footer */}
+      <Footer />
 
-        </div>
-    );
+    </div>
+  );
 }

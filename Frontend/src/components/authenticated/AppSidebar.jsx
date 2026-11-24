@@ -1,6 +1,6 @@
-// Responsibility: Desktop navigation, collapsible sidebar, active-page highlighting and logout.
 
 import { NavLink, useNavigate } from "react-router-dom";
+import BrandMark from "../BrandMark";
 import {
   LayoutDashboard,
   Heart,
@@ -9,8 +9,9 @@ import {
   LogOut,
   PanelLeftClose,
   PanelLeftOpen,
-  Sparkles,
-  ChartLine
+  ChartLine,
+  BookOpen,
+  Flower2,
 } from "lucide-react";
 
 const navigationItems = [
@@ -25,24 +26,30 @@ const navigationItems = [
     icon: Heart,
   },
   {
+    label: "Programs",
+    path: "/programs",
+    icon: Flower2,
+  },
+  {
     label: "Mood History",
     path: "/mood-history",
     icon: History,
   },
-
   {
-  label: "Analytics",
-  path: "/analytics",
-  icon: ChartLine,
-},
-
+    label: "Analytics",
+    path: "/analytics",
+    icon: ChartLine,
+  },
+  {
+    label: "Blogs",
+    path: "/blogs",
+    icon: BookOpen,
+  },
   {
     label: "My Profile",
     path: "/account",
     icon: UserRound,
   },
-
-  
 ];
 
 export default function AppSidebar({
@@ -60,56 +67,53 @@ export default function AppSidebar({
         transition-all duration-300
         ${collapsed ? "w-20" : "w-64"}`}
     >
-      
-{/* Brand */}
-<div className="shrink-0 border-b border-white/10">
-  {/* Serenity logo */}
-  <div
-    className={`h-20 flex items-center px-5 ${
-      collapsed ? "justify-center" : "justify-start"
-    }`}
-  >
-    <button
-      type="button"
-      onClick={() => navigate("/dashboard")}
-      className="flex items-center gap-3 min-w-0"
-      title="Go to Dashboard"
-    >
-      <Sparkles className="w-7 h-7 text-[#4ECDC4] shrink-0" />
+      {/* Brand */}
+      <div className="shrink-0 border-b border-white/10">
+        <div
+          className={`h-20 flex items-center px-5 ${
+            collapsed ? "justify-center" : "justify-start"
+          }`}
+        >
+          <button
+            type="button"
+            onClick={() => navigate("/dashboard")}
+            className="flex items-center gap-3 min-w-0"
+            title="Go to Dashboard"
+          >
+            <BrandMark className="w-8 h-8" />
 
-      {!collapsed && (
-        <span className="font-display text-2xl italic text-white">
-          Serenity
-        </span>
-      )}
-    </button>
-  </div>
+            {!collapsed && (
+              <span className="font-display text-2xl italic text-white">
+                Serenity
+              </span>
+            )}
+          </button>
+        </div>
 
-  {/* Separate sidebar toggle row */}
-  <div
-    className={`h-12 flex items-center px-4 ${
-      collapsed ? "justify-center" : "justify-end"
-    }`}
-  >
-    <button
-      type="button"
-      onClick={onToggle}
-      className="w-9 h-9 flex items-center justify-center
-        rounded-lg text-gray-400
-        hover:text-[#4ECDC4] hover:bg-white/5
-        transition-colors"
-      aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-      title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-    >
-      {collapsed ? (
-        <PanelLeftOpen size={19} />
-      ) : (
-        <PanelLeftClose size={19} />
-      )}
-    </button>
-  </div>
-</div>
-
+        {/* Sidebar Toggle */}
+        <div
+          className={`h-12 flex items-center px-4 ${
+            collapsed ? "justify-center" : "justify-end"
+          }`}
+        >
+          <button
+            type="button"
+            onClick={onToggle}
+            className="w-9 h-9 flex items-center justify-center
+              rounded-lg text-gray-400
+              hover:text-[#4ECDC4] hover:bg-white/5
+              transition-colors"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? (
+              <PanelLeftOpen size={19} />
+            ) : (
+              <PanelLeftClose size={19} />
+            )}
+          </button>
+        </div>
+      </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-7 space-y-2">
@@ -126,6 +130,7 @@ export default function AppSidebar({
             <NavLink
               key={item.path}
               to={item.path}
+              end
               title={collapsed ? item.label : undefined}
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-xl px-3 py-3

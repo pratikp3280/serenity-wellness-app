@@ -107,6 +107,16 @@ public class SecurityConfig {
                     "/api/health"
                 ).permitAll()
 
+             // Public visitors can view approved testimonials and their summary.
+                .requestMatchers(
+                    HttpMethod.GET,
+                    "/api/testimonials",
+                    "/api/testimonials/summary"
+                ).permitAll()
+                
+                
+                
+             // Everything else requires authentication unless explicitly permitted.
                 .anyRequest().authenticated()
             )
 

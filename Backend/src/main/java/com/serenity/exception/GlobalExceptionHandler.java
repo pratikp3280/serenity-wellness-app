@@ -76,9 +76,27 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body(Map.of(
                         "message",
-                        "Invalid request. Please provide a supported mood and valid JSON."
+                        "Invalid request body. Please check the submitted values and try again."
                 ));
     }
+    
+    
+    
+ // Handle invalid values rejected by service-level validation.
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgument(
+            IllegalArgumentException exception) {
+
+        return ResponseEntity
+                .badRequest()
+                .body(Map.of(
+                        "message",
+                        exception.getMessage()
+                ));
+    }
+    
+    
+    
     
     
 }

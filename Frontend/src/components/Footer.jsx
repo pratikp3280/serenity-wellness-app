@@ -1,34 +1,24 @@
-// Footer.jsx : A Footer is a UI component that represents the last section of a webpage,
-//  containing important links, company info, support, and legal details
-
-/* Footer
-│
-├── Logo + Description + Socials
-├── Links Sections (4 columns)
-│     ├── Product
-│     ├── Company
-│     ├── Support
-│     └── Legal
-│
-└── Bottom Bar (copyright + status)
-*/
-import { motion } from "framer-motion";
-
-//Array of links(Objects) to display in the footer, categorized into Product, Company, Support, and Legal sections
+import BrandMark from "./BrandMark";
+// Existing footer link labels, with destinations added.
 const links = {
-  Product: ["Features", "How It Works", "Programs", "Community", "Pricing"],
-  Company: ["About Us", "Blog", "Careers", "Press", "Partners"],
-  Support: ["Help Center", "Contact Us", "Status", "Feedback", "Accessibility"],
+  Product: [
+    { label: "Features", href: "#features" },
+    { label: "How It Works", href: "#how-it-works" },
+    { label: "Programs", href: "#features" },
+    { label: "Community", href: "#blog" },
+    { label: "Pricing", href: "/register" },
+  ],
+
   Legal: [
-    "Terms of Service",
-    "Privacy Policy",
-    "Cookie Policy",
-    "Licenses",
-    "GDPR",
+    { label: "Terms of Service", href: "#" },
+    { label: "Privacy Policy", href: "#" },
+    { label: "Cookie Policy", href: "#" },
+    { label: "Licenses", href: "#" },
+    { label: "GDPR", href: "#" },
   ],
 };
 
-// Social media icons - SVG{Scalable Vector Graphics} components for Instagram, Twitter, YouTube, and LinkedIn used in the footer's social section
+// Social media icons
 function TwitterIcon() {
   return (
     <svg
@@ -74,11 +64,10 @@ function LinkedInIcon() {
     >
       <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.027-3.058-1.865-3.058-1.865 0-2.151 1.455-2.151 2.959v5.703h-3v-10h2.881v1.367h.041c.401-.76 1.381-1.561 2.844-1.561 3.041 0 3.604 2.001 3.604 4.604v5.59z" />
     </svg>
-  )
+  );
 }
 
-// Animation variants for Framer Motion
-// - Defines how elements will animate when they come into view
+// Social media links
 const socials = [
   {
     Icon: InstagramIcon,
@@ -102,7 +91,7 @@ const socials = [
   },
 ];
 
-// Footer component - The main export of this file, representing the footer section of the webpage,
+// Footer component
 export default function Footer() {
   return (
     <footer className="relative border-t border-white/5 pt-20 pb-10 px-6">
@@ -110,12 +99,20 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-10 mb-16">
+          {/* Logo, Description and Social Links */}
           <div className="col-span-2">
-            <a href="#" className="flex items-center gap-2 mb-4 w-fit">
-              <span className="text-aurora text-xl">✦</span>
-             <span className="font-display text-6xl font-bold text-yellow tracking-wide">
-  serenity
-</span>
+            <a
+              href="/"
+              aria-label="Serenity homepage"
+              className="flex items-center gap-3 mb-4 w-fit"
+            >
+              {/* Lotus Logo */}
+              <BrandMark className="h-[90px] w-[90px] shrink-0" />
+
+              {/* Existing wordmark — preserved */}
+              <span className="font-display text-6xl font-bold text-yellow tracking-wide">
+                serenity
+              </span>
             </a>
 
             <p className="text-white/35 text-sm leading-relaxed max-w-xs mb-6">
@@ -139,31 +136,32 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Dynamic Rendering: Links by Category  */}
+          {/* Footer Links */}
           {Object.entries(links).map(([category, items]) => (
             <div key={category}>
-             <h4
-  className={
-    'text-xs font-semibold tracking-widest uppercase mb-5 ' +
-    (category === 'Product'
-      ? 'text-aurora'
-      : category === 'Company'
-      ? 'text-indigo-400'
-      : category === 'Support'
-      ? 'text-yellow-400'
-      : 'text-pink-400')
-  }
->
-  {category}
-</h4>
+              <h4
+                className={
+                  "text-xs font-semibold tracking-widest uppercase mb-5 " +
+                  (category === "Product"
+                    ? "text-aurora"
+                    : category === "Company"
+                      ? "text-indigo-400"
+                      : category === "Support"
+                        ? "text-yellow-400"
+                        : "text-pink-400")
+                }
+              >
+                {category}
+              </h4>
+
               <ul className="space-y-3">
                 {items.map((item) => (
-                  <li key={item}>
+                  <li key={item.label}>
                     <a
-                      href="#"
+                      href={item.href}
                       className="text-white/45 text-sm hover:text-aurora transition-colors duration-200"
                     >
-                      {item}
+                      {item.label}
                     </a>
                   </li>
                 ))}
@@ -172,8 +170,8 @@ export default function Footer() {
           ))}
         </div>
 
+        {/* Bottom Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/5">
-          {/* 👉 Auto updates year  */}
           <p className="text-white/20 text-xs">
             © {new Date().getFullYear()} Serenity Inc. All rights reserved.
           </p>
@@ -191,7 +189,18 @@ export default function Footer() {
             <div className="hidden sm:flex items-center gap-1">
               <span className="text-white/20 text-xs">Made with</span>
               <span className="text-aurora/60 text-xs">♥</span>
-              <span className="text-white/20 text-xs">By <span><a href="https://www.linkedin.com/in/pratik-p-patil-1485aa1bb/" className="text-aurora/60 hover:text-aurora transition-colors duration-200">Pratik</a></span> for your mind</span>
+              <span className="text-white/20 text-xs">
+                By{" "}
+                <a
+                  href="https://www.linkedin.com/in/pratik-p-patil-1485aa1bb/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-aurora/60 hover:text-aurora transition-colors duration-200"
+                >
+                  Pratik
+                </a>{" "}
+                for your mind
+              </span>
             </div>
           </div>
         </div>

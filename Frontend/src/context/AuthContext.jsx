@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
 
             return currentUser;
 
-        } catch (error) {
+        } catch  {
 
             setUser(null);
 

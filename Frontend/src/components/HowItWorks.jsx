@@ -1,146 +1,135 @@
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { Gauge, Waves, TrendingUp } from 'lucide-react'
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { Heart, Wind, TrendingUp } from "lucide-react";
 
 const steps = [
   {
-    number: '01',
-    icon: Gauge,
-    title: 'Choose Your State',
-    desc: 'Start by selecting your current mood — calm, stressed, anxious, or unfocused. Serenity reads where you are and curates the perfect session for this exact moment in your day.',
-    accentColor: 'text-aurora',
-    iconBg: 'bg-aurora/10',
-    iconBorder: 'border-aurora/20',
-    numberColor: 'text-aurora/40',
+    number: "01",
+    icon: Heart,
+    title: "Check In With Yourself",
+    description:
+      "Start by choosing how you're feeling. Add an optional journal note to capture your thoughts and create a personal record of your mood.",
+    color: "text-aurora",
+    iconBackground: "bg-aurora/10",
+    iconBorder: "border-aurora/20",
   },
   {
-    number: '02',
-    icon: Waves,
-    title: 'Follow the Guide',
-    desc: 'Whether it is a guided meditation, immersive soundscape, or deep breathing session, every experience is crafted by neuroscientists and mindfulness experts for real results.',
-    accentColor: 'text-gold',
-    iconBg: 'bg-gold/10',
-    iconBorder: 'border-gold/20',
-    numberColor: 'text-gold/40',
+    number: "02",
+    icon: Wind,
+    title: "Take a Mindful Pause",
+    description:
+      "Give yourself a moment to slow down. Follow the breathing guide, find a comfortable rhythm, and reconnect with the present moment.",
+    color: "text-gold",
+    iconBackground: "bg-gold/10",
+    iconBorder: "border-gold/20",
   },
   {
-    number: '03',
+    number: "03",
     icon: TrendingUp,
-    title: 'Track Your Growth',
-    desc: 'Build a mindfulness habit with streaks, mood tracking, and deep insights that evolve as you do. Your progress feels rewarding and natural, never pressuring or performative.',
-    accentColor: 'text-purple-400',
-    iconBg: 'bg-purple-400/10',
-    iconBorder: 'border-purple-400/20',
-    numberColor: 'text-purple-400/40',
+    title: "Reflect on Your Journey",
+    description:
+      "Return to your mood history and explore your personal insights. Notice your activity, mood distribution, and patterns over time.",
+    color: "text-purple-300",
+    iconBackground: "bg-purple-400/10",
+    iconBorder: "border-purple-300/20",
   },
-]
+];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 32 },
   visible: { opacity: 1, y: 0 },
-}
+};
 
 export default function HowItWorks() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-80px' })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="how-it-works" ref={ref} className="py-28 px-6 relative overflow-hidden">
-
-      <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        style={{ opacity: 0.4 }}
-      >
+    <section
+      id="how-it-works"
+      ref={ref}
+      className="scroll-mt-24 relative overflow-hidden px-6 py-28"
+    >
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div
-          className="w-96 h-96 rounded-full blur-3xl"
-          style={{ background: 'rgba(78, 205, 196, 0.05)' }}
+          className="h-96 w-96 rounded-full blur-3xl"
+          style={{ background: "rgba(78,205,196,0.045)" }}
         />
       </div>
 
-      <div className="max-w-6xl mx-auto relative">
-
+      <div className="relative mx-auto max-w-6xl">
         <motion.div
           variants={fadeUp}
           initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-20"
+          animate={isInView ? "visible" : "hidden"}
+          transition={{ duration: 0.65 }}
+          className="mx-auto mb-20 max-w-2xl text-center"
         >
-          <p className="text-aurora/60 text-sm tracking-widest uppercase mb-4">
-            Simple process
+          <p className="mb-4 text-sm uppercase tracking-widest text-aurora/60">
+            HOW SERENITY WORKS
           </p>
-          <h2 className="font-display text-5xl md:text-6xl font-light text-white">
-            Three steps to{' '}
-            <span className="italic gradient-text">peace</span>
+          <h2 className="font-display text-5xl font-light text-white md:text-6xl">
+            A little awareness <span className="italic gradient-text">goes a long way.</span>
           </h2>
-          <p className="text-white/40 text-base mt-5 max-w-lg mx-auto leading-relaxed">
-            A few mindful moments can change your entire day. Serenity makes starting effortless.
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/45">
+            Build a gentle routine around checking in with yourself, taking a
+            mindful pause, and understanding your emotional journey.
           </p>
         </motion.div>
 
         <div className="relative">
-
-          <div className="hidden md:block absolute top-16 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-          <div className="grid md:grid-cols-3 gap-10">
-            {steps.map((step, i) => (
-              <motion.div
-                key={step.number}
-                variants={fadeUp}
-                initial="hidden"
-                animate={isInView ? 'visible' : 'hidden'}
-                transition={{ duration: 0.6, delay: i * 0.15 }}
-                className="flex flex-col items-center md:items-start text-center md:text-left"
-              >
-
-                <div className="relative mb-8">
-                  <div className={
-                    'w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ' +
-                    step.iconBg + ' border ' + step.iconBorder
-                  }>
-                    <step.icon size={28} className={step.accentColor} />
+          <div className="absolute left-0 right-0 top-8 hidden h-px bg-gradient-to-r from-transparent via-white/10 to-transparent md:block" />
+          <div className="grid gap-12 md:grid-cols-3 md:gap-8">
+            {steps.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <motion.article
+                  key={step.number}
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate={isInView ? "visible" : "hidden"}
+                  transition={{ duration: 0.55, delay: index * 0.13 }}
+                  className="flex flex-col items-center text-center md:items-start md:text-left"
+                >
+                  <div className="relative mb-7">
+                    <div className={`flex h-16 w-16 items-center justify-center rounded-2xl border ${step.iconBackground} ${step.iconBorder}`}>
+                      <Icon size={27} className={step.color} aria-hidden="true" />
+                    </div>
+                    <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-midnight text-xs font-semibold text-white/55">
+                      {index + 1}
+                    </span>
                   </div>
 
-                  <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-midnight border border-white/10 flex items-center justify-center">
-                    <span className="text-white/40 text-xs font-semibold">{i + 1}</span>
-                  </div>
-
-                  <span className={
-                    'text-xs tracking-widest font-semibold uppercase ' + step.numberColor
-                  }>
-                    Step {step.number}
-                  </span>
-                </div>
-
-                <h3 className="font-display text-2xl font-medium text-white mb-4">
-                  {step.title}
-                </h3>
-
-                <p className="text-white/45 text-sm leading-relaxed">
-                  {step.desc}
-                </p>
-
-              </motion.div>
-            ))}
+                  <p className={`mb-3 text-xs font-semibold tracking-widest ${step.color}`}>
+                    STEP {step.number}
+                  </p>
+                  <h3 className="mb-4 font-display text-2xl font-medium text-white">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-white/50">
+                    {step.description}
+                  </p>
+                </motion.article>
+              );
+            })}
           </div>
         </div>
 
         <motion.div
           variants={fadeUp}
           initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          transition={{ duration: 0.7, delay: 0.55 }}
-          className="text-center mt-16"
+          animate={isInView ? "visible" : "hidden"}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mt-16 text-center"
         >
           <a
-            href="#mood"
-            className="btn-ghost px-8 py-3.5 rounded-full text-sm inline-flex items-center gap-2"
+            href="#breathing"
+            className="btn-ghost inline-flex items-center rounded-full px-8 py-3.5 text-sm"
           >
-            Try it now — it is free
+            Try a Breathing Exercise
           </a>
         </motion.div>
-
       </div>
     </section>
-  )
+  );
 }
