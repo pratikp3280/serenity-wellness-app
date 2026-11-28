@@ -1,5 +1,4 @@
-
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = "";
 
 // Read a cookie from the browser.
 function getCookie(name) {
@@ -66,7 +65,6 @@ export async function apiRequest(path, options = {}) {
 
     if (requiresCsrf) {
         const csrfToken = await initializeCsrf();
-
         headers["X-XSRF-TOKEN"] = csrfToken;
     }
 
@@ -81,7 +79,6 @@ export async function apiRequest(path, options = {}) {
         }
     );
 
-    // Handle responses that contain no body.
     if (response.status === 204) {
         return null;
     }
@@ -96,67 +93,3 @@ export async function apiRequest(path, options = {}) {
 
     return data;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-React Components
-Login.jsx · Register.jsx · MoodSelector.jsx
-        |
-        V
-
-api.js
-Central API communication utility(Instead of writing cookie, CSRF and error-handling logic repeatedly in every component, we'll centralize it in one file.)
-Cookies · CSRF · Requests · Errors
-        |
-        V
-
-Spring Boot REST APIs
-localhost:8080
-
-
-
-
-
-
-
-
-
-
-
-
-Code	                What it does
-API_BASE_URL	        Stores our backend address
-getCookie()	            Reads the CSRF cookie
-initializeCsrf()	    Requests a CSRF token from Spring Security
-apiRequest()	        Sends reusable API requests
-credentials:            "include"	Includes eligible session cookies
-X-XSRF-TOKEN	        Sends the CSRF token in the expected header
-response.ok	            Checks whether the HTTP request succeeded
-*/ 

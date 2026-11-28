@@ -2,6 +2,8 @@
 package com.serenity.config;
 
 import java.util.List;
+import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -33,9 +35,24 @@ import org.springframework.util.StringUtils;
 @Configuration
 public class SecurityConfig {
 
+    @Value("${app.cors.allowed-origins:http://localhost:5173}")
+    private String allowedOrigins;
+
+    @Value("${app.security.cookie-secure:false}")
+    private boolean secureCookies;
+
     @Bean
     public CsrfTokenRepository csrfTokenRepository() {
-        return CookieCsrfTokenRepository.withHttpOnlyFalse();
+        CookieCsrfTokenRepository repository =
+            CookieCsrfTokenRepository.withHttpOnlyFalse();
+
+        repository.setCookieCustomizer(cookie -> cookie
+            .secure(secureCookies)
+            .path("/")
+            .sameSite("Lax")
+        );
+
+        return repository;
     }
 
     @Bean
@@ -51,7 +68,10 @@ public class SecurityConfig {
 
         // Allow requests from our React frontend.
         configuration.setAllowedOrigins(
-            List.of("http://localhost:5173")
+            Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(StringUtils::hasText)
+                .toList()
         );
 
         // Allow the HTTP methods required by our APIs.
